@@ -5,6 +5,7 @@ install.packages("stringi")
 library(stringr)
 library(rvest)
 library(dplyr)
+library(purrr)
 
 base_url <- 'http://www.football-lab.jp'
 
@@ -17,13 +18,29 @@ sections <- base_html %>% html_nodes("div.linkPast a") %>%
   # html_structure()
 
 # 各節の対戦カードへのリンクを取得
-matches <- base_html %>% html_nodes("div.cardtab a") %>%
+games <- base_html %>% html_nodes("div.cardtab a") %>%
   html_attr("href") %>% 
   str_c(base_url, .)
 
+# 各試合の情報を取得
+game <- games[3]
+game_html <- read_html(game)
+## 
+game_teams <- game_html %>% 
+  html_nodes(".preview_name table") %>% 
+  html_table() %>% 
+  map("X2")
+  
+game_hometeam <- game_html %>% 
+  html_nodes(".myTeamBox table") %>% 
+  html_table(fill=TRUE)
+game_hometeam[[1]]
+
+# %>% tbl_df()
+
 url <- 'http://www.football-lab.jp/y-fm/'
 team_html <- read_html(url)
-team_html_sjis <- team_html %>% iconv(from = "UTF-8")
+# team_html_sjis <- team_html %>% iconv(from = "UTF-8")
 team_html %>% html_table()
 team_players <- team_html %>% 
   html_node('#sorTable') %>% 
