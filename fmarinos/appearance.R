@@ -53,26 +53,26 @@ teams <- first_html %>%
   html_attr("title")
 
 # 各節各試合の出場時間を取得
-section <- sections[2]
-base_html <- read_html(section)
+# section <- sections[2]
+# base_html <- read_html(section)
 
 ## 各節の対戦カードへのリンクを取得
-games <- base_html %>% html_nodes("div.cardtab a") %>%
-  html_attr("href") %>% 
-  str_c(base_url, .)
+# games <- base_html %>% html_nodes("div.cardtab a") %>%
+  # html_attr("href") %>% 
+  # str_c(base_url, .)
 
 ## 各試合の情報を取得
-game_section_playtimes <- npforeach(game = games, i = 1:length(games), .multicombine = T, .combine = c)({
-  cat(i, ":", Sys.time(), "\n")
-  Sys.sleep(1)
-  create_section_playtimes(game)
-})
+# game_section_playtimes <- npforeach(game = games, i = 1:length(games), .multicombine = T, .combine = c)({
+  # cat(i, ":", Sys.time(), "\n")
+  # Sys.sleep(1)
+  # create_section_playtimes(game)
+# })
 
-game2_section_playtimes <- npforeach(game = games, i = 1:length(games), .multicombine = T, .combine = c)({
-  cat(i, ":", Sys.time(), "\n")
-  Sys.sleep(1)
-  create_section_playtimes(game)
-})
+# game2_section_playtimes <- npforeach(game = games, i = 1:length(games), .multicombine = T, .combine = c)({
+  # cat(i, ":", Sys.time(), "\n")
+  # Sys.sleep(1)
+  # create_section_playtimes(game)
+# })
 # teams_playtimes <- npforeach(section = sections, i = 1:length(sections), .combine = list)({
 teams_playtimes <- npforeach(section = sections[1:3], i = 1:length(sections[1:3]), .combine = list)({
   base_html <- read_html(section)
@@ -90,6 +90,8 @@ teams_playtimes <- npforeach(section = sections[1:3], i = 1:length(sections[1:3]
   })
   game_section_playtimes
 })
+list(game1_section_playtimes[[1]], game2_section_playtimes[[1]])
+
 teams_playtimes[[2]]
 teams_playtimes_all <- teams_playtimes[[1]]
 teams_J1 <- names(teams_playtimes_all)
